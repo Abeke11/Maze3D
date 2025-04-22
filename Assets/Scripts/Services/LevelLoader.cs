@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public static class LevelLoader
 {
-    public static int SelectedIndex { get; private set; }
+    public static int SelectedIndex { get;  set; }
 
     public static void LoadLevel(int index)
     {

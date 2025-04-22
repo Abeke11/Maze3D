@@ -8,7 +8,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<ITimeService>().To<TimeService>().AsSingle();
         Container.Bind<IGameStateService>().To<GameStateService>().AsSingle();
         Container.Bind<IVFXService>().To<VFXService>().AsSingle();
+        Container.Bind<IProgressService>().To<ProgressService>().AsSingle();
 
-       
     }
 }

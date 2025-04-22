@@ -11,6 +11,9 @@ public class ExitTrigger : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             _playerExit.OnNext(Unit.Default);
+            Debug.Log("Dalban");
+        }
     }
 }

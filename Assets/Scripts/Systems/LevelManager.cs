@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UniRx;
 using Zenject;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -10,18 +11,24 @@ public class LevelManager : MonoBehaviour
 
     ITimeService _timeService;
     IGameStateService _gameState;
-    [Inject] DiContainer _container; 
+    IProgressService _progress;
+    [Inject] DiContainer _container;
 
     [Inject]
-    public void Construct(ITimeService ts, IGameStateService gs)
+    public void Construct(
+        ITimeService ts,
+        IGameStateService gs,
+        IProgressService ps)
     {
         _timeService = ts;
         _gameState = gs;
+        _progress = ps;
     }
 
     void Start()
     {
-        var config = levelDatabase.levels[LevelLoader.SelectedIndex];
+        int idx = LevelLoader.SelectedIndex;
+        var config = levelDatabase.levels[idx];
 
         var labyrinth = Instantiate(
             config.labyrinthPrefab,
@@ -30,51 +37,64 @@ public class LevelManager : MonoBehaviour
             rootContainer
         );
 
-        var playerSpawn = FindWithTagIn(labyrinth, "PlayerSpawn");
+        var pSpawn = FindWithTag(labyrinth, "PlayerSpawn");
         _container.InstantiatePrefab(
             config.playerPrefab,
-            playerSpawn.position,
-            playerSpawn.rotation,
+            pSpawn.position,
+            pSpawn.rotation,
             labyrinth.transform
         );
 
         _timeService.StartCountdown(config.timeLimit);
 
-        foreach (var spawn in FindAllWithTagIn(labyrinth, "BoosterSpawn"))
+        foreach (var bSpawn in FindAllWithTag(labyrinth, "BoosterSpawn"))
         {
             _container.InstantiatePrefab(
                 config.boosterPrefab,
-                spawn.position,
+                bSpawn.position,
                 Quaternion.identity,
                 labyrinth.transform
             );
         }
 
-        var exitSpawn = FindWithTagIn(labyrinth, "ExitSpawn");
-        var exitObj = new GameObject("ExitTrigger");
-        exitObj.transform.SetParent(labyrinth.transform);
-        exitObj.transform.position = exitSpawn.position;
-        exitObj.transform.rotation = exitSpawn.rotation;
+        var eSpawn = FindWithTag(labyrinth, "ExitSpawn");
+        var exitInstance = _container.InstantiatePrefab(
+            config.exitPrefab,
+            eSpawn.position,
+            eSpawn.rotation,
+            labyrinth.transform
+        );
 
-        var col = exitObj.AddComponent<BoxCollider>();
-        col.isTrigger = true;
-        var trigger = exitObj.AddComponent<ExitTrigger>();
-        trigger.OnPlayerExit
-               .Subscribe(_ => _gameState.EndGame(true))
-               .AddTo(this);
+        var exitTrigger = exitInstance.GetComponent<ExitTrigger>();
+        if (exitTrigger != null)
+        {
+            exitTrigger.OnPlayerExit
+                       .First()  
+                       .Subscribe(_ =>
+                       {
+                           float elapsed = config.timeLimit - _timeService.RemainingTime;
+                           _progress.RecordResult(idx, elapsed);
+                           
+                           SceneManager.LoadScene("LevelSelect");
+                       })
+                       .AddTo(this);
+        }
 
         _timeService.OnTimeUp
-                    .Take(1)
-                    .Subscribe(_ => _gameState.EndGame(false))
+                    .First()
+                    .Subscribe(_ =>
+                    {
+                        SceneManager.LoadScene("LevelSelect");
+                    })
                     .AddTo(this);
     }
 
-    Transform FindWithTagIn(GameObject root, string tag) =>
+    Transform FindWithTag(GameObject root, string tag) =>
         root.GetComponentsInChildren<Transform>()
             .FirstOrDefault(t => t.CompareTag(tag))
         ?? root.transform;
 
-    System.Collections.Generic.IEnumerable<Transform> FindAllWithTagIn(GameObject root, string tag) =>
+    System.Collections.Generic.IEnumerable<Transform> FindAllWithTag(GameObject root, string tag) =>
         root.GetComponentsInChildren<Transform>()
             .Where(t => t.CompareTag(tag));
 }

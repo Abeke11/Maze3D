@@ -13,6 +13,8 @@ public class LevelConfigSO : ScriptableObject
     public GameObject boosterPrefab;
     [Header("Префаб игрока")]
     public GameObject playerPrefab;
+    [Header("Префаб игрока")]
+    public GameObject exitPrefab;
 
     [Header("Тег спавна бустеров внутри лабиринта")]
     public string boosterSpawnTag = "BoosterSpawn";
