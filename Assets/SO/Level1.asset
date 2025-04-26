@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   labyrinthPrefab: {fileID: 8976263279485962376, guid: 80f574fea3675d5499c0dcbc344243de, type: 3}
-  playerPrefab: {fileID: 1727844983239633308, guid: d4e43ce4c4f85d24eacdcbb800518401, type: 3}
-  boosterPrefab: {fileID: 4780937076105290020, guid: 2fa41147f2790a144a8943e2ea1a0eea, type: 3}
-  exitPrefab: {fileID: 4626788479311860682, guid: d48e029317e2d0346b8bea31b6229ec8, type: 3}
   timeLimit: 60
+  boosterPrefab: {fileID: 4780937076105290020, guid: 2fa41147f2790a144a8943e2ea1a0eea, type: 3}
+  playerPrefab: {fileID: 3037787717642879691, guid: 43571dddcdab7314ba1786ad74cc295b, type: 3}
+  exitPrefab: {fileID: 4626788479311860682, guid: d48e029317e2d0346b8bea31b6229ec8, type: 3}
+  boosterSpawnTag: BoosterSpawn
+  exitTag: ExitSpawn

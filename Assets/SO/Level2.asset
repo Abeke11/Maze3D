@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 623b24432a6c9c947a7284a2c07c31e5, type: 3}
+  m_Name: Level2
+  m_EditorClassIdentifier: 
+  labyrinthPrefab: {fileID: 8976263279485962376, guid: e1c84b832909a07459d5bcf33e55c771, type: 3}
+  timeLimit: 60
+  boosterPrefab: {fileID: 4780937076105290020, guid: 2fa41147f2790a144a8943e2ea1a0eea, type: 3}
+  playerPrefab: {fileID: 3037787717642879691, guid: 43571dddcdab7314ba1786ad74cc295b, type: 3}
+  exitPrefab: {fileID: 4626788479311860682, guid: d48e029317e2d0346b8bea31b6229ec8, type: 3}
+  boosterSpawnTag: BoosterSpawn
+  exitTag: ExitSpawn
